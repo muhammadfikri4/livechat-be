@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @default(uuid())
+  name     String
+  email    String     @unique
+  password String
+  code     String
+  friends  Friend[]   @relation("UserFriends")
+  rooms    RoomUser[]
+  messages Message[]
+  Friend   Friend[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([code], map: "user_code_unique")
+  @@map("users")
+}
+
+model Friend {
+  id       String @id @default(uuid())
+  userId   String @map("user_id")
+  friendId String @map("friend_id")
+
+  user   User @relation("UserFriends", fields: [userId], references: [id])
+  friend User @relation(fields: [friendId], references: [id])
+
+  @@map("friends")
+}
+
+model Room {
+  id        String     @id @default(uuid())
+  name      String?
+  users     RoomUser[]
+  messages  Message[]
+  createdAt DateTime   @default(now())
+
+  @@map("rooms")
+}
+
+model RoomUser {
+  id     String @id @default(uuid())
+  roomId String
+  userId String
+
+  room Room @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("room_users")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  senderId  String
+  roomId    String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  sender User @relation(fields: [senderId], references: [id])
+  room   Room @relation(fields: [roomId], references: [id])
+
+  @@map("messages")
+}
