@@ -34,83 +34,83 @@ export const ablyAuthentication = async (req: Request, res: Response) => {
 };
 
 // ✅ DEBUG: Enhanced presence listener with detailed logging
-const presenceChannel = realtime.channels.get("presence:users");
-const userTimeouts = new Map<string, NodeJS.Timeout>();
+// const presenceChannel = realtime.channels.get("presence:users");
+// const userTimeouts = new Map<string, NodeJS.Timeout>();
 
-console.log("🔥 Presence channel initialized, waiting for events...");
+// console.log("🔥 Presence channel initialized, waiting for events...");
 
-presenceChannel.presence.subscribe(async (msg) => {
-  try {
-    const userId = msg.clientId?.split(":")[1];
-    if (!userId) {
-      console.log("❌ No userId found in clientId:", msg.clientId);
-      return;
-    }
+// presenceChannel.presence.subscribe(async (msg) => {
+//   try {
+//     const userId = msg.clientId?.split(":")[1];
+//     if (!userId) {
+//       console.log("❌ No userId found in clientId:", msg.clientId);
+//       return;
+//     }
 
-    console.log("🎯 PRESENCE EVENT:", {
-      action: msg.action,
-      userId,
-      clientId: msg.clientId,
-      timestamp: new Date().toISOString()
-    });
+//     console.log("🎯 PRESENCE EVENT:", {
+//       action: msg.action,
+//       userId,
+//       clientId: msg.clientId,
+//       timestamp: new Date().toISOString()
+//     });
 
-    if (msg.action === "enter") {
-      const existingTimeout = userTimeouts.get(userId);
-      if (existingTimeout) {
-        clearTimeout(existingTimeout);
-        userTimeouts.delete(userId);
-        console.log(`⏰ Cleared existing timeout for user ${userId}`);
-      }
+//     if (msg.action === "enter") {
+//       const existingTimeout = userTimeouts.get(userId);
+//       if (existingTimeout) {
+//         clearTimeout(existingTimeout);
+//         userTimeouts.delete(userId);
+//         console.log(`⏰ Cleared existing timeout for user ${userId}`);
+//       }
 
-      // Update database
-      await prisma.user.update({ 
-        where: { id: userId }, 
-        data: { 
-          isOnline: true, 
-          lastSeen: new Date() 
-        } 
-      });
+//       // Update database
+//       await prisma.user.update({ 
+//         where: { id: userId }, 
+//         data: { 
+//           isOnline: true, 
+//           lastSeen: new Date() 
+//         } 
+//       });
 
-      console.log(`✅ Database updated: User ${userId} is ONLINE`);
+//       console.log(`✅ Database updated: User ${userId} is ONLINE`);
       
-      // Broadcast immediately
-      const broadcastResult = await broadcastToFriends(userId, "online");
-      console.log(`📡 Broadcast result for ${userId} ONLINE:`, broadcastResult);
-    }
+//       // Broadcast immediately
+//       const broadcastResult = await broadcastToFriends(userId, "online");
+//       console.log(`📡 Broadcast result for ${userId} ONLINE:`, broadcastResult);
+//     }
 
-    if (msg.action === "leave") {
-      console.log(`⏳ Setting timeout for user ${userId} to go offline...`);
+//     if (msg.action === "leave") {
+//       console.log(`⏳ Setting timeout for user ${userId} to go offline...`);
       
-      const timeout = setTimeout(async () => {
-        try {
-          await prisma.user.update({ 
-            where: { id: userId }, 
-            data: { 
-              isOnline: false, 
-              lastSeen: new Date() 
-            } 
-          });
+//       const timeout = setTimeout(async () => {
+//         try {
+//           await prisma.user.update({ 
+//             where: { id: userId }, 
+//             data: { 
+//               isOnline: false, 
+//               lastSeen: new Date() 
+//             } 
+//           });
           
-          userTimeouts.delete(userId);
-          console.log(`❌ Database updated: User ${userId} is OFFLINE`);
+//           userTimeouts.delete(userId);
+//           console.log(`❌ Database updated: User ${userId} is OFFLINE`);
           
-          const broadcastResult = await broadcastToFriends(userId, "offline");
-          console.log(`📡 Broadcast result for ${userId} OFFLINE:`, broadcastResult);
-        } catch (error) {
-          console.error(`Error setting user ${userId} offline:`, error);
-        }
-      }, 5000); // ✅ Reduced to 5 seconds for testing
+//           const broadcastResult = await broadcastToFriends(userId, "offline");
+//           console.log(`📡 Broadcast result for ${userId} OFFLINE:`, broadcastResult);
+//         } catch (error) {
+//           console.error(`Error setting user ${userId} offline:`, error);
+//         }
+//       }, 5000); // ✅ Reduced to 5 seconds for testing
 
-      userTimeouts.set(userId, timeout);
-    }
+//       userTimeouts.set(userId, timeout);
+//     }
 
-  } catch (error) {
-    console.error("❌ Presence event error:", error);
-  }
-});
+//   } catch (error) {
+//     console.error("❌ Presence event error:", error);
+//   }
+// });
 
 // ✅ Enhanced broadcast function with detailed logging
-async function broadcastToFriends(userId: string, status: "online" | "offline") {
+export async function broadcastToFriends(userId: string, status: "online" | "offline") {
   try {
     console.log(`🔍 Getting user and friends for ${userId}...`);
 

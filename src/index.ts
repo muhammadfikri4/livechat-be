@@ -9,6 +9,8 @@ import http from "http";
 import { config } from "./libs";
 import routes from "./routes";
 import { HandlingError } from "./utils/HandlingError";
+import { Server } from "socket.io";
+import { initialConnectSocket } from "./utils/socket";
 
 const app = express();
 
@@ -51,25 +53,18 @@ app.use(bodyParser.json())
 app.use(express.json())
 
 app.use(routes);
-// websocket.on("connection", (ws) => {
-  //   ws.on("message", (message) => console.log(message));
-  // });
-  const server = http.createServer(app);
-  // export const wss = new WebSocketServer({ server });
-  // app.listen(port, () => {
-    //   console.log(`Server running on port ${port}🚀`);
-    // });
-    // app.get('/messages', async (req, res) => {
-    //   const messages = await prisma.message.findMany({
-    //     orderBy: { createdAt: 'asc' },
-    //   })
-    //   res.json(messages)
-    // })
-    // setupWebSocket(server)
+
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+
+
+io.on("connection", initialConnectSocket);
 
     app.use(HandlingError);
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+export {io}
 export default app;
