@@ -13,4 +13,5 @@ export const userRepository = {
     prisma.user.findUnique({ where: {
       code
     }}),
+  updateOnlineUser: async(userId: string, isOnline: boolean) => prisma.user.update({ where: { id: userId }, data: { isOnline } })
 };

@@ -15,7 +15,7 @@ export const friendController = {
     HandleResponse(res, 201, MESSAGE_CODE.SUCCESS, "Friend added successfully", result);
   },
   getFriends: async (req: RequestWithAccessToken, res: Response, next: NextFunction) => {
-    const result = await friendService.getFriends(req.userId ?? '');
+    const result = await friendService.getFriends(req.userId ?? '', req.query);
     if (result instanceof Error) {
         next(result);
         return

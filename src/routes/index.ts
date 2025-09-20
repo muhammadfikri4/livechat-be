@@ -7,6 +7,7 @@ import authRoutes from "../app/auth/auth.route";
 import userRoutes from "../app/users/users.route";
 import friendRoutes from "../app/friends/friends.route";
 import roomRoutes from "../app/room/room.route";
+import ablyRoute from "../app/ably/ably.route";
 import { VerifyToken } from "../middleware/verifyToken";
 
 const route = Router();
@@ -16,6 +17,7 @@ route.use('/auth',authRoutes);
 route.use('/users', VerifyToken(), userRoutes);
 route.use('/friends', VerifyToken(), friendRoutes);
 route.use('/rooms', roomRoutes);
+route.use('/ably', ablyRoute);
 
 
 

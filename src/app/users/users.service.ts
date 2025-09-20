@@ -19,5 +19,17 @@ export const userService = {
       return new ErrorApp("User not found", 404, MESSAGE_CODE.NOT_FOUND);
     }
     await userRepository.updateUser(id, { name })
-  }
+  },
+  updateUserOnline: async(id: string) => {
+    const user = await userRepository.getUserById(id)
+    if(user) {
+      await userRepository.updateOnlineUser(id, true)
+    }
+  },
+  updateUserOffline: async(id: string) => {
+    const user = await userRepository.getUserById(id)
+    if(user) {
+      await userRepository.updateOnlineUser(id, false)
+    }
+  },
 };

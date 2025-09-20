@@ -30,11 +30,7 @@ export const MESSAGES = {
         NIM: "NIM is already exist",
       },
       USER: "User already exist",
-      ROLE: "Role is already exist",
-      DEPARTMENT: "Department is already exist",
-      BUDGET_PENDING:
-        "You have a budget that is still pending, please complete it first.",
-      BUDGET: "You have submitted a budget for this year.",
+      FRIEND: "Friend already exist",
     },
     INVALID: {
       GLOBAL: {
@@ -56,6 +52,7 @@ export const MESSAGES = {
       FAILED_REQUEST: "Failed to create budget",
       HOD_BUDGET: "You must have a department head to submit a budget.",
       USER_CODE: "User code is invalid",
+      FRIEND_CODE: "Friend code is invalid",
     },
     UNAUTHORIZED: {
       AUTH: "If you are not logged in, please log in first",

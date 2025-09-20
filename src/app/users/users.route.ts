@@ -7,5 +7,7 @@ const router = Router();
 
 router.get("/profile/me", userController.getProfile);
 router.put("/profile/me", validateRequest(updateProfileSchema), userController.updateProfile);
+router.put("/online", userController.updateUserOnline);
+router.put("/offline", userController.updateUserOffline);
 
 export default router;

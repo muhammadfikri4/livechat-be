@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const config = {
-  PORT: process.env.PORT ?? 3001,
-  JWT_SECRET: process.env.JWT_SECRET ?? '',
+  PORT: Number(process.env.PORT ?? 3001),
+  JWT_SECRET: JSON.stringify(process.env.JWT_SECRET ?? ''),
   JWT_EXPIRES: process.env.JWT_EXPIRES,
   CODE: process.env.CODE,
   SMTP_USER: process.env.SMTP_USER,
+  ABLY_API_KEY: process.env.ABLY_API_KEY ?? '',
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
   SMTP_HOST: process.env.SMTP_HOST,
   SMTP_PORT: process.env.SMTP_PORT,

@@ -4,12 +4,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import bodyParser from "body-parser";
 import http from "http";
 import { config } from "./libs";
 import routes from "./routes";
 import { HandlingError } from "./utils/HandlingError";
-import { setupWebSocket } from "./utils/ws";
-import bodyParser from "body-parser";
 
 const app = express();
 
@@ -32,6 +31,7 @@ app.use(
       "Content-Type",
       "Date",
       "X-Api-Version",
+      ''
     ],
     credentials: true,
     preflightContinue: false,
@@ -65,7 +65,8 @@ app.use(routes);
     //   })
     //   res.json(messages)
     // })
-    setupWebSocket(server)
+    // setupWebSocket(server)
+
     app.use(HandlingError);
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

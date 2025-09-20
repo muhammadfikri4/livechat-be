@@ -30,9 +30,6 @@ export const VerifyToken =
         );
       }
       const decoded = decode(token) as TokenDecodeInterface;
-      console.log({
-        token,
-      });
       let errno: ErrorApp | undefined;
       verify(token, config.JWT_SECRET as string, (err: unknown) => {
         if (err) {
@@ -71,7 +68,6 @@ export const VerifyToken =
       }
 
       const user = await userRepository.getUserById(decoded?.userId);
-      console.log(decoded, user)
       if (!user) {
         return HandleResponse(
           res,

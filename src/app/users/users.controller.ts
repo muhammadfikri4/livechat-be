@@ -19,4 +19,12 @@ export const userController = {
       }
       HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, "Profile retrieved successfully", user);
   },
+  updateUserOnline: async (req: RequestWithAccessToken, res: Response) => {
+    const user = await userService.updateUserOnline(req.userId ?? '');
+      HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, "Update Online status successfully", user);
+  },
+  updateUserOffline: async (req: RequestWithAccessToken, res: Response) => {
+    const user = await userService.updateUserOffline(req.userId ?? '');
+      HandleResponse(res, 200, MESSAGE_CODE.SUCCESS, "Update Online status successfully", user);
+  },
 };
