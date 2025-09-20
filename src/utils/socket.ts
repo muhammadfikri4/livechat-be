@@ -41,6 +41,7 @@ socket.on("login", async (token: string) => {
         });
       }
     });
+    console.log('update to online...')
     await prisma.user.update({
       where: {
         id: user.id,
@@ -78,7 +79,7 @@ socket.on("login", async (token: string) => {
           ],
         },
       });
-  
+  const date = new Date()
       friends.forEach((f) => {
         const friendId =
           f.userId === disconnectedUser ? f.friendId : f.userId;
@@ -88,10 +89,11 @@ socket.on("login", async (token: string) => {
             id: user.id,
             name: user.name,
             isOnline: false,
+            lastSeen: date
           });
         }
       });
-      console.log('update to db', {
+      console.log('update to offline...', {
         id: user.id,
         name: user.name
       })
@@ -101,7 +103,7 @@ socket.on("login", async (token: string) => {
         },
         data: {
           isOnline: false,
-          lastSeen: new Date()
+          lastSeen: date
         }
       })
     }
