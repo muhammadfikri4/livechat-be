@@ -2,7 +2,6 @@ import { type Request } from "express";
 import { FileFilterCallback } from "multer";
 import { MESSAGE_CODE } from "./ErrorCode";
 import { ErrorApp } from "./HttpError";
-import { MESSAGES } from "./Messages";
 
 export const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
     if (
@@ -14,9 +13,9 @@ export const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilt
     } else if (file.size > 5242880) {
 
         cb(null, false);
-        return new ErrorApp(MESSAGES.ERROR.INVALID.IMAGE_SIZE, 400, MESSAGE_CODE.BAD_REQUEST)
+        return new ErrorApp('File size must be less than 5MB', 400, MESSAGE_CODE.BAD_REQUEST)
     } else {
         cb(null, false);
-        return new ErrorApp(MESSAGES.ERROR.INVALID.FILE_TYPE, 400, MESSAGE_CODE.BAD_REQUEST)
+        return new ErrorApp('File type must be png, jpg or jpeg', 400, MESSAGE_CODE.BAD_REQUEST)
     }
 };
